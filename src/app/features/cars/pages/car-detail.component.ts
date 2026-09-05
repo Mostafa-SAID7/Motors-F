@@ -21,106 +21,138 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
   template: `
     <!-- Loading -->
     @if (isLoading()) {
-      <div class="container mx-auto px-6 py-12">
+      <div class="container mx-auto px-6 pt-32 py-12">
         <app-skeleton-loader type="image"></app-skeleton-loader>
       </div>
     }
 
     <!-- Car Not Found -->
     @if (!isLoading() && !car()) {
-      <div class="container mx-auto px-6 py-24 text-center">
-        <div class="text-8xl mb-6">🔍</div>
-        <h2 class="text-3xl font-bold mb-3">السيارة غير موجودة</h2>
-        <p class="text-slate-400 mb-8">لم يتم العثور على السيارة المطلوبة</p>
+      <div class="container mx-auto px-6 pt-40 py-24 text-center">
+        <div class="w-24 h-24 rounded-3xl bg-muted flex items-center justify-center mx-auto mb-8">
+          <i class="pi pi-search text-4xl text-muted-foreground"></i>
+        </div>
+        <h2 class="text-3xl font-bold mb-3 font-display">السيارة غير موجودة</h2>
+        <p class="text-muted-foreground mb-8">لم يتم العثور على السيارة المطلوبة</p>
         <a routerLink="/cars" class="btn btn-primary px-8 py-3 rounded-xl">العودة للمعرض</a>
       </div>
     }
 
     <!-- Car Detail -->
     @if (!isLoading() && car()) {
-      <div class="animate-fadeInUp">
+      <div class="animate-fadeInUp font-body">
 
-        <!-- ── Breadcrumb ─────────────────────────────────────────── -->
-        <div class="border-b border-slate-700/50 bg-slate-900/50 backdrop-blur-xl sticky top-0 z-30">
-          <div class="container mx-auto px-6 py-3 flex items-center gap-2 text-sm text-slate-400">
-            <a routerLink="/" class="hover:text-white transition">الرئيسية</a>
-            <span>/</span>
-            <a routerLink="/cars" class="hover:text-white transition">السيارات</a>
-            <span>/</span>
-            <span class="text-white font-semibold">{{ car()!.brand }} {{ car()!.model }}</span>
+        <!-- ── Breadcrumb — sits BELOW the fixed header ────────────────── -->
+        <div class="pt-20 border-b border-border/40 bg-background/80 backdrop-blur-xl">
+          <div class="container mx-auto px-6 py-3 flex items-center gap-2 text-sm text-muted-foreground">
+            <a routerLink="/" class="hover:text-foreground transition-colors flex items-center gap-1.5">
+              <i class="pi pi-home text-xs"></i>
+              الرئيسية
+            </a>
+            <i class="pi pi-angle-left text-xs opacity-40"></i>
+            <a routerLink="/cars" class="hover:text-foreground transition-colors">السيارات</a>
+            <i class="pi pi-angle-left text-xs opacity-40"></i>
+            <span class="text-foreground font-semibold">{{ car()!.brand }} {{ car()!.model }}</span>
           </div>
         </div>
 
+        <!-- ── Main Content ────────────────────────────────────────────── -->
         <div class="container mx-auto px-6 py-10">
-          <div class="grid grid-cols-1 xl:grid-cols-5 gap-8">
+          <div class="grid grid-cols-1 xl:grid-cols-5 gap-10">
 
-            <!-- ── Left: Gallery (3/5) ─────────────────────────────── -->
-            <div class="xl:col-span-3">
+            <!-- ── Left: Gallery + Description (3/5) ──────────────────── -->
+            <div class="xl:col-span-3 space-y-6">
               <app-image-gallery [images]="car()!.images"></app-image-gallery>
 
               <!-- Description -->
-              <div class="glass-effect rounded-2xl p-6 mt-6">
-                <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
-                  <span class="text-blue-400">📋</span> الوصف
+              <div class="card p-6">
+                <h3 class="text-base font-bold mb-4 text-foreground flex items-center gap-2">
+                  <i class="pi pi-list text-primary"></i>
+                  الوصف
                 </h3>
-                <p class="text-slate-300 leading-relaxed text-base">{{ car()!.description }}</p>
+                <p class="text-muted-foreground leading-relaxed text-base font-body">{{ car()!.description }}</p>
+              </div>
+
+              <!-- Reviews -->
+              <div class="card p-6">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2 font-display">
+                  <i class="pi pi-star-fill text-yellow-500"></i>
+                  التقييمات والمراجعات
+                </h2>
+                <app-rating
+                  [rating]="car()!.rating || 0"
+                  [reviewCount]="car()!.reviews || 0"
+                  [isEditing]="isEditingReview()"
+                  (ratingSubmit)="submitReview($event)"
+                  (editModeChange)="isEditingReview.set($event)">
+                </app-rating>
               </div>
             </div>
 
-            <!-- ── Right: Info (2/5) ───────────────────────────────── -->
+            <!-- ── Right: Info Panel (2/5) ─────────────────────────────── -->
             <div class="xl:col-span-2 space-y-5">
 
               <!-- Title & Badges -->
-              <div>
+              <div class="card p-6">
                 <div class="flex items-center gap-2 mb-3">
-                  <span class="badge-cinematic px-3 py-1 rounded-full text-xs font-bold"
-                        [class.text-green-400]="car()!.condition === 'new'"
-                        [class.text-orange-400]="car()!.condition === 'used'">
-                    <i [class.pi-bolt]="car()!.condition === 'new'" [class.pi-refresh]="car()!.condition !== 'new'" class="pi me-1"></i>{{ car()!.condition === 'new' ? 'جديد' : 'مستعمل' }}
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border"
+                        [class.bg-primary/10]="car()!.condition === 'new'"
+                        [class.text-primary]="car()!.condition === 'new'"
+                        [class.border-primary/20]="car()!.condition === 'new'"
+                        [class.bg-muted]="car()!.condition === 'used'"
+                        [class.text-muted-foreground]="car()!.condition === 'used'"
+                        [class.border-border]="car()!.condition === 'used'">
+                    <i [class.pi-bolt]="car()!.condition === 'new'" [class.pi-refresh]="car()!.condition !== 'new'" class="pi text-xs"></i>
+                    {{ car()!.condition === 'new' ? 'جديد' : 'مستعمل' }}
                   </span>
-                  <span class="badge-cinematic px-3 py-1 rounded-full text-xs text-slate-300">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold bg-muted text-muted-foreground border border-border">
                     {{ car()!.year }}
                   </span>
                 </div>
-                <h1 class="text-4xl font-black mb-2">{{ car()!.brand }} {{ car()!.model }}</h1>
+
+                <h1 class="text-3xl font-black mb-2 font-display text-foreground">{{ car()!.brand }} {{ car()!.model }}</h1>
 
                 <!-- Rating -->
                 @if (car()!.rating) {
-                  <div class="flex items-center gap-2 text-sm">
-                    <div class="flex text-yellow-400">
+                  <div class="flex items-center gap-2 text-sm mt-2">
+                    <div class="flex gap-0.5">
                       @for (star of [1,2,3,4,5]; track star) {
-                        <i [class.pi-star-fill]="star <= Math.round(car()!.rating!)" [class.pi-star]="star > Math.round(car()!.rating!)" class="pi text-yellow-400 text-xs"></i>
+                        <i [class.pi-star-fill]="star <= Math.round(car()!.rating!)"
+                           [class.pi-star]="star > Math.round(car()!.rating!)"
+                           class="pi text-yellow-500 text-xs"></i>
                       }
                     </div>
-                    <span class="font-semibold text-white">{{ car()!.rating }}/5</span>
-                    <span class="text-slate-400">({{ car()!.reviews }} تقييم)</span>
+                    <span class="font-semibold text-foreground">{{ car()!.rating }}/5</span>
+                    <span class="text-muted-foreground text-xs">({{ car()!.reviews }} تقييم)</span>
                   </div>
                 }
               </div>
 
               <!-- Price -->
-              <div class="glass-effect rounded-2xl p-5">
-                <p class="text-slate-400 text-sm mb-1">السعر</p>
-                <p class="text-5xl font-black gradient-text">$ {{ car()!.price | number }}</p>
+              <div class="card p-6">
+                <p class="text-muted-foreground text-xs font-black uppercase tracking-widest mb-1">السعر</p>
+                <p class="text-4xl font-black font-display text-foreground">{{ car()!.price | number }}
+                  <span class="text-xl text-muted-foreground font-bold"> ر.س</span>
+                </p>
               </div>
 
               <!-- Specs Grid -->
-              <div class="glass-effect rounded-2xl p-5">
-                <h3 class="text-base font-bold mb-4 text-slate-300 flex items-center gap-2">
-                  <i class="pi pi-cog text-blue-400"></i> المواصفات
+              <div class="card p-6">
+                <h3 class="text-sm font-black mb-4 text-foreground uppercase tracking-widest flex items-center gap-2">
+                  <i class="pi pi-cog text-primary"></i> المواصفات
                 </h3>
                 <div class="grid grid-cols-2 gap-3">
 
                   <div class="spec-item">
-                    <i class="pi pi-map-marker spec-icon"></i>
+                    <i class="pi pi-map-marker spec-icon text-primary"></i>
                     <div>
                       <p class="spec-label">المسافة المقطوعة</p>
-                      <p class="spec-value">{{ car()!.mileage | number }} km</p>
+                      <p class="spec-value">{{ car()!.mileage | number }} كم</p>
                     </div>
                   </div>
 
                   <div class="spec-item">
-                    <i class="pi pi-cog spec-icon"></i>
+                    <i class="pi pi-cog spec-icon text-primary"></i>
                     <div>
                       <p class="spec-label">ناقل الحركة</p>
                       <p class="spec-value">{{ car()!.transmission }}</p>
@@ -128,7 +160,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   </div>
 
                   <div class="spec-item">
-                    <i class="pi pi-gauge spec-icon"></i>
+                    <i class="pi pi-gauge spec-icon text-primary"></i>
                     <div>
                       <p class="spec-label">نوع الوقود</p>
                       <p class="spec-value">{{ car()!.fuelType }}</p>
@@ -136,7 +168,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   </div>
 
                   <div class="spec-item">
-                    <i class="pi pi-wrench spec-icon"></i>
+                    <i class="pi pi-wrench spec-icon text-primary"></i>
                     <div>
                       <p class="spec-label">حجم المحرك</p>
                       <p class="spec-value">{{ car()!.engineSize }}</p>
@@ -144,7 +176,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   </div>
 
                   <div class="spec-item">
-                    <i class="pi pi-palette spec-icon"></i>
+                    <i class="pi pi-palette spec-icon text-primary"></i>
                     <div>
                       <p class="spec-label">اللون</p>
                       <p class="spec-value">{{ car()!.color }}</p>
@@ -152,7 +184,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   </div>
 
                   <div class="spec-item">
-                    <i class="pi pi-calendar spec-icon"></i>
+                    <i class="pi pi-calendar spec-icon text-primary"></i>
                     <div>
                       <p class="spec-label">سنة الصنع</p>
                       <p class="spec-value">{{ car()!.year }}</p>
@@ -165,44 +197,35 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
               <!-- Action Buttons -->
               <div class="space-y-3">
                 <button (click)="bookNow()"
-                  class="btn btn-primary w-full py-4 rounded-xl text-lg font-bold">
-                  <i class="pi pi-calendar-plus me-2"></i> احجز الآن
+                  class="btn btn-primary w-full py-4 rounded-xl text-base font-bold flex items-center justify-center gap-3 shadow-glow">
+                  <i class="pi pi-calendar-plus text-lg"></i>
+                  احجز الآن
                 </button>
 
                 <div class="grid grid-cols-2 gap-3">
                   <button (click)="contactSeller()"
-                    class="btn btn-secondary py-3 rounded-xl font-semibold">
-                    <i class="pi pi-phone me-2"></i> تواصل معنا
+                    class="btn btn-secondary py-3 rounded-xl font-semibold flex items-center justify-center gap-2">
+                    <i class="pi pi-phone"></i> تواصل معنا
                   </button>
                   <button (click)="toggleFavorite()"
-                    class="btn btn-secondary py-3 rounded-xl font-semibold text-xl"
-                    [class.text-red-400]="isFavorite()">
-                    <i [class.pi-heart-fill]="isFavorite()" [class.pi-heart]="!isFavorite()" class="pi"></i>
+                    class="btn btn-secondary py-3 rounded-xl font-semibold flex items-center justify-center gap-2"
+                    [class.text-primary]="isFavorite()"
+                    [class.border-primary]="isFavorite()">
+                    <i [class.pi-heart-fill]="isFavorite()" [class.pi-heart]="!isFavorite()" class="pi text-lg"></i>
+                    {{ isFavorite() ? 'في المفضلة' : 'إضافة للمفضلة' }}
                   </button>
                 </div>
 
                 <a [routerLink]="['/cars', car()!.id, 'edit']"
-                  class="btn btn-secondary w-full py-3 rounded-xl text-center font-semibold block">
-                  <i class="pi pi-pencil me-2"></i> تعديل بيانات السيارة
+                  class="btn btn-secondary w-full py-3 rounded-xl text-center font-semibold flex items-center justify-center gap-2">
+                  <i class="pi pi-pencil"></i> تعديل بيانات السيارة
                 </a>
               </div>
 
             </div>
           </div>
-
-          <!-- ── Reviews ──────────────────────────────────────────────── -->
-          <div class="mt-12 pt-10 border-t border-slate-700/50">
-            <h2 class="text-2xl font-bold mb-6"><i class="pi pi-star-fill text-yellow-400 me-2"></i> التقييمات والمراجعات</h2>
-            <app-rating
-              [rating]="car()!.rating || 0"
-              [reviewCount]="car()!.reviews || 0"
-              [isEditing]="isEditingReview()"
-              (ratingSubmit)="submitReview($event)"
-              (editModeChange)="isEditingReview.set($event)">
-            </app-rating>
-          </div>
-
         </div>
+
       </div>
     }
   `,
@@ -211,26 +234,28 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      padding: 10px;
+      padding: 12px;
       border-radius: 10px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: hsl(var(--muted) / 0.4);
+      border: 1px solid hsl(var(--border) / 0.5);
     }
     .spec-icon {
-      font-size: 18px;
+      font-size: 16px;
       flex-shrink: 0;
-      margin-top: 2px;
+      margin-top: 3px;
     }
     .spec-label {
-      font-size: 11px;
-      color: #94a3b8;
-      font-weight: 500;
-      margin-bottom: 2px;
+      font-size: 10px;
+      color: hsl(var(--muted-foreground));
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
     }
     .spec-value {
-      font-size: 14px;
-      font-weight: 700;
-      color: #f1f5f9;
+      font-size: 13px;
+      font-weight: 800;
+      color: hsl(var(--foreground));
     }
   `],
 })
@@ -252,7 +277,6 @@ export class CarDetailComponent implements OnInit {
     this.route.params.subscribe(params => {
       const id = params['id'];
       this.isLoading.set(true);
-      // Small tick to allow mock data signal to settle
       setTimeout(() => {
         if (id) {
           const foundCar = this.carService.getCarById(id);
@@ -269,7 +293,7 @@ export class CarDetailComponent implements OnInit {
       this.carService.toggleFavorite(this.car()!.id);
       this.isFavorite.update(v => !v);
       this.notificationService.success(
-        this.isFavorite() ? 'تمت الإضافة إلى المفضلة ❤️' : 'تمت الإزالة من المفضلة'
+        this.isFavorite() ? 'تمت الإضافة إلى المفضلة' : 'تمت الإزالة من المفضلة'
       );
     }
   }
@@ -283,7 +307,7 @@ export class CarDetailComponent implements OnInit {
   }
 
   submitReview(event: { rating: number; comment: string }): void {
-    this.notificationService.success('شكراً على تقييمك! 🌟');
+    this.notificationService.success('شكراً على تقييمك!');
     this.isEditingReview.set(false);
   }
 }
