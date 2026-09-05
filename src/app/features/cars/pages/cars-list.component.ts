@@ -191,7 +191,7 @@ type ViewMode = 'card' | 'table';
 
                     <td class="px-4 py-5 text-center hidden md:table-cell">
                       <div class="flex items-center justify-center gap-1.5 text-primary font-black">
-                        <span class="text-base">★</span>
+                        <i class="pi pi-star-fill text-primary text-base"></i>
                         <span>{{ car.rating || '—' }}</span>
                       </div>
                     </td>
@@ -199,15 +199,15 @@ type ViewMode = 'card' | 'table';
                     <td class="px-8 py-5">
                       <div class="flex items-center justify-center gap-3">
                         <a [routerLink]="['/cars', car.id]"
-                          class="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-foreground hover:bg-primary hover:text-white transition-all shadow-sm" title="عرض">👁️</a>
+                          class="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-foreground hover:bg-primary hover:text-white transition-all shadow-sm" title="عرض"><i class="pi pi-eye text-sm"></i></a>
                         <a [routerLink]="['/cars', car.id, 'edit']"
-                          class="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-foreground hover:bg-primary hover:text-white transition-all shadow-sm" title="تعديل">✏️</a>
+                          class="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-foreground hover:bg-primary hover:text-white transition-all shadow-sm" title="تعديل"><i class="pi pi-pencil text-sm"></i></a>
                         <button (click)="toggleFavorite(car.id)"
                           class="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary transition-all shadow-sm"
                           [class.text-primary]="carService.isFavorite(car.id)"
                           [class.text-muted-foreground]="!carService.isFavorite(car.id)"
                           title="مفضلة">
-                          {{ carService.isFavorite(car.id) ? '❤️' : '🤍' }}
+                          <i [class.pi-heart-fill]="carService.isFavorite(car.id)" [class.pi-heart]="!carService.isFavorite(car.id)" class="pi text-sm"></i>
                         </button>
                       </div>
                     </td>

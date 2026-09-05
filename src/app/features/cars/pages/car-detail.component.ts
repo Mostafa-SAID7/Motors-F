@@ -76,7 +76,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   <span class="badge-cinematic px-3 py-1 rounded-full text-xs font-bold"
                         [class.text-green-400]="car()!.condition === 'new'"
                         [class.text-orange-400]="car()!.condition === 'used'">
-                    {{ car()!.condition === 'new' ? '✨ جديد' : '🔄 مستعمل' }}
+                    <i [class.pi-bolt]="car()!.condition === 'new'" [class.pi-refresh]="car()!.condition !== 'new'" class="pi me-1"></i>{{ car()!.condition === 'new' ? 'جديد' : 'مستعمل' }}
                   </span>
                   <span class="badge-cinematic px-3 py-1 rounded-full text-xs text-slate-300">
                     {{ car()!.year }}
@@ -89,7 +89,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   <div class="flex items-center gap-2 text-sm">
                     <div class="flex text-yellow-400">
                       @for (star of [1,2,3,4,5]; track star) {
-                        <span>{{ star <= Math.round(car()!.rating!) ? '★' : '☆' }}</span>
+                        <i [class.pi-star-fill]="star <= Math.round(car()!.rating!)" [class.pi-star]="star > Math.round(car()!.rating!)" class="pi text-yellow-400 text-xs"></i>
                       }
                     </div>
                     <span class="font-semibold text-white">{{ car()!.rating }}/5</span>
@@ -107,12 +107,12 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
               <!-- Specs Grid -->
               <div class="glass-effect rounded-2xl p-5">
                 <h3 class="text-base font-bold mb-4 text-slate-300 flex items-center gap-2">
-                  <span class="text-blue-400">⚙️</span> المواصفات
+                  <i class="pi pi-cog text-blue-400"></i> المواصفات
                 </h3>
                 <div class="grid grid-cols-2 gap-3">
 
                   <div class="spec-item">
-                    <span class="spec-icon">🛣️</span>
+                    <i class="pi pi-map-marker spec-icon"></i>
                     <div>
                       <p class="spec-label">المسافة المقطوعة</p>
                       <p class="spec-value">{{ car()!.mileage | number }} km</p>
@@ -120,7 +120,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   </div>
 
                   <div class="spec-item">
-                    <span class="spec-icon">⚙️</span>
+                    <i class="pi pi-cog spec-icon"></i>
                     <div>
                       <p class="spec-label">ناقل الحركة</p>
                       <p class="spec-value">{{ car()!.transmission }}</p>
@@ -128,7 +128,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   </div>
 
                   <div class="spec-item">
-                    <span class="spec-icon">⛽</span>
+                    <i class="pi pi-gauge spec-icon"></i>
                     <div>
                       <p class="spec-label">نوع الوقود</p>
                       <p class="spec-value">{{ car()!.fuelType }}</p>
@@ -136,7 +136,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   </div>
 
                   <div class="spec-item">
-                    <span class="spec-icon">🔧</span>
+                    <i class="pi pi-wrench spec-icon"></i>
                     <div>
                       <p class="spec-label">حجم المحرك</p>
                       <p class="spec-value">{{ car()!.engineSize }}</p>
@@ -144,7 +144,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   </div>
 
                   <div class="spec-item">
-                    <span class="spec-icon">🎨</span>
+                    <i class="pi pi-palette spec-icon"></i>
                     <div>
                       <p class="spec-label">اللون</p>
                       <p class="spec-value">{{ car()!.color }}</p>
@@ -152,7 +152,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
                   </div>
 
                   <div class="spec-item">
-                    <span class="spec-icon">📅</span>
+                    <i class="pi pi-calendar spec-icon"></i>
                     <div>
                       <p class="spec-label">سنة الصنع</p>
                       <p class="spec-value">{{ car()!.year }}</p>
@@ -166,24 +166,24 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
               <div class="space-y-3">
                 <button (click)="bookNow()"
                   class="btn btn-primary w-full py-4 rounded-xl text-lg font-bold">
-                  🔖 احجز الآن
+                  <i class="pi pi-calendar-plus me-2"></i> احجز الآن
                 </button>
 
                 <div class="grid grid-cols-2 gap-3">
                   <button (click)="contactSeller()"
                     class="btn btn-secondary py-3 rounded-xl font-semibold">
-                    📞 تواصل معنا
+                    <i class="pi pi-phone me-2"></i> تواصل معنا
                   </button>
                   <button (click)="toggleFavorite()"
                     class="btn btn-secondary py-3 rounded-xl font-semibold text-xl"
                     [class.text-red-400]="isFavorite()">
-                    {{ isFavorite() ? '❤️' : '🤍' }}
+                    <i [class.pi-heart-fill]="isFavorite()" [class.pi-heart]="!isFavorite()" class="pi"></i>
                   </button>
                 </div>
 
                 <a [routerLink]="['/cars', car()!.id, 'edit']"
                   class="btn btn-secondary w-full py-3 rounded-xl text-center font-semibold block">
-                  ✏️ تعديل بيانات السيارة
+                  <i class="pi pi-pencil me-2"></i> تعديل بيانات السيارة
                 </a>
               </div>
 
@@ -192,7 +192,7 @@ import { SkeletonLoaderComponent } from '../../../components/skeleton-loader/ske
 
           <!-- ── Reviews ──────────────────────────────────────────────── -->
           <div class="mt-12 pt-10 border-t border-slate-700/50">
-            <h2 class="text-2xl font-bold mb-6">⭐ التقييمات والمراجعات</h2>
+            <h2 class="text-2xl font-bold mb-6"><i class="pi pi-star-fill text-yellow-400 me-2"></i> التقييمات والمراجعات</h2>
             <app-rating
               [rating]="car()!.rating || 0"
               [reviewCount]="car()!.reviews || 0"

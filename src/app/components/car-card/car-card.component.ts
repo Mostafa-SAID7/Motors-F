@@ -28,9 +28,9 @@ import { Car } from '../../core/models/car.model';
           class="absolute top-4 right-4 w-10 h-10 rounded-full bg-background/80 backdrop-blur-md flex items-center justify-center border border-border/50 shadow-lg hover:bg-primary hover:text-white transition-all duration-300 z-20 hover:scale-110"
           [title]="isFavorite ? 'إزالة من المفضلة' : 'إضافة للمفضلة'"
         >
-          <span [class.text-primary]="isFavorite" class="text-lg group-hover:text-white">
-            {{ isFavorite ? '❤️' : '🤍' }}
-          </span>
+          <i [class.pi-heart-fill]="isFavorite" [class.pi-heart]="!isFavorite"
+             [class.text-primary]="isFavorite"
+             class="pi text-base group-hover:text-white transition-all"></i>
         </button>
 
         <!-- Condition Badge -->
@@ -67,7 +67,7 @@ import { Car } from '../../core/models/car.model';
         <!-- Rating -->
         @if (car.rating) {
           <div class="flex items-center gap-2 mb-5">
-            <span class="text-primary text-xl">★</span>
+            <i class="pi pi-star-fill text-primary text-base"></i>
             <span class="text-sm font-black text-foreground">{{ car.rating }}</span>
             <span class="text-[10px] text-muted-foreground font-bold mr-2">({{ car.reviews }} تقييم)</span>
           </div>
@@ -98,7 +98,7 @@ import { Car } from '../../core/models/car.model';
             class="w-12 h-12 flex items-center justify-center bg-secondary border border-border rounded-xl hover:border-primary hover:text-primary transition-all duration-300 shadow-sm"
             title="مقارنة"
           >
-            🔄
+            <i class="pi pi-arrow-right-arrow-left"></i>
           </button>
         </div>
       </div>
