@@ -210,7 +210,7 @@
 /* Custom Utilities from User */
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-l from-primary to-error;
+    @apply bg-clip-text text-transparent bg-gradient-to-l from-primary to-destructive;
   }
 
   .glass {
