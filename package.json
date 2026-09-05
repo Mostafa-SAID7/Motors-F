@@ -47,7 +47,6 @@
     "@angular/cli": "^21.2.5",
     "@angular/compiler-cli": "^21.2.0",
     "@primeng/themes": "^21.0.4",
-    "@tailwindcss/postcss": "^4.2.2",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
