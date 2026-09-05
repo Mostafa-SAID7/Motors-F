@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Dark background -->
+  <rect width="64" height="64" rx="12" fill="#0a0a0a"/>
+  <!-- Car body -->
+  <path d="M10 38 Q14 30 22 28 L26 24 Q30 20 36 20 L46 20 Q52 20 54 26 L56 32 Q58 33 58 36 L58 40 Q58 42 56 42 L52 42 Q51 46 47 46 Q43 46 42 42 L22 42 Q21 46 17 46 Q13 46 12 42 L8 42 Q8 40 10 38Z" fill="#DC2626"/>
+  <!-- Windshield -->
+  <path d="M28 28 L26 24 Q30 20 36 20 L44 20 L46 28Z" fill="#0a0a0a" opacity="0.6"/>
+  <!-- Front headlight -->
+  <path d="M56 30 L58 32 L58 34 L55 34 Z" fill="white" opacity="0.9"/>
+  <!-- Rear light -->
+  <path d="M10 33 L8 35 L8 38 L11 37 Z" fill="#ff6666" opacity="0.8"/>
+  <!-- Wheels -->
+  <circle cx="19" cy="42" r="5" fill="#1a1a1a" stroke="#DC2626" stroke-width="1.5"/>
+  <circle cx="19" cy="42" r="2" fill="#333"/>
+  <circle cx="47" cy="42" r="5" fill="#1a1a1a" stroke="#DC2626" stroke-width="1.5"/>
+  <circle cx="47" cy="42" r="2" fill="#333"/>
+  <!-- Shine line -->
+  <path d="M28 24 Q36 22 44 23" stroke="white" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+</svg>
